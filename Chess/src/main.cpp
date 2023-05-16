@@ -1,5 +1,7 @@
 // Chess 
 #include "Chess.h"
+#include"Piece.h"
+#include"Board.h"
 
 int main()
 {
@@ -26,6 +28,8 @@ int main()
 
 		/**/ 
 		{ // put your code here instead that code
+			Board board = Board();
+
 			cout << "code response >> ";
 			cin >> codeResponse;
 		}

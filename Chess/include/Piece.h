@@ -1,6 +1,9 @@
 #pragma once
-#include <string>
+#include<string>
 #include "Player.h"
+
+class Board;
+
 class Piece
 {
 private:
@@ -8,6 +11,6 @@ private:
 
 public:
 	Piece(Player player);
-	virtual void move() = 0;
+	bool the_piece_belongs_to(const Player player,const std::string str_loc, Board board) const;
+	virtual bool is_legal_move(const std::string str_loc,const Board board) = 0;
 };
-

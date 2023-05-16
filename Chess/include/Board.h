@@ -1,18 +1,19 @@
 #pragma once
-#include<string>
 #include"Piece.h"
-#include"Player.h"
-
-using namespace std::string;
 
 class Piece;
-int SIZE = 8;
+
 class Board {
 	Player whos_turn = WHITE_PLAYER;
-	Piece pieces[SIZE][SIZE];
+	Piece* pieces[8][8];
+	int* convert_str_to_loc(std::string str_loc);
 
-	int* conversion_to_location(string loc);
 public:
 	Board();
-	bool there_is_a_piece(string location);
+	bool there_is_a_piece(std::string location);
+	Piece* get_piece(const int* location)const;	
+
+	friend class Piece;
 };
+
+
