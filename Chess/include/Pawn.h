@@ -4,6 +4,6 @@ class Pawn :
     public Piece
 {
 public:
-    Pawn(std::string name, Player player);
+    Pawn(Player player);
 };
 

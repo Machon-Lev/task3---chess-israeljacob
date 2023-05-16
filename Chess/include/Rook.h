@@ -3,6 +3,6 @@
 class Rook :
     public Piece
 {
-    Rook(std::string name, Player player);
+    Rook(Player player);
 };
 

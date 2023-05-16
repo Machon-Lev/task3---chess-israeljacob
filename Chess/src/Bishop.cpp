@@ -1,6 +1,6 @@
 #include "Bishop.h"
 
-Bishop::Bishop(std::string name, Player player) :Piece(name, player)
+Bishop::Bishop(Player player) :Piece(player)
 {
 
 }

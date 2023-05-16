@@ -4,6 +4,6 @@ class Bishop :
     public Piece
 {
 public:
-    Bishop(std::string name, Player player);
+    Bishop(Player player);
 };
 

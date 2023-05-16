@@ -3,5 +3,5 @@
 class Queen :
 	public Piece
 {
-	Queen(std::string name, Player player);
+	Queen(Player player);
 };

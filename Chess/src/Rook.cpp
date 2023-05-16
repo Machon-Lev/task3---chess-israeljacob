@@ -1,5 +1,5 @@
 #include "Rook.h"
 
-Rook::Rook(std::string name, Player player) : Piece(name, player)
+Rook::Rook(Player player) : Piece(player)
 {
 }

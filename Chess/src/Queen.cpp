@@ -1,5 +1,5 @@
 #include "Queen.h"
 
-Queen::Queen(std::string name, Player player) : Piece(name, player)
+Queen::Queen(Player player) : Piece(player)
 {
 }

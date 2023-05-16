@@ -4,13 +4,10 @@
 class Piece
 {
 private:
-	std::string _name;
 	Player _player;
-protected:
-	int _value;
 
 public:
-	Piece(std::string name, Player player);
+	Piece(Player player);
 	virtual void move() = 0;
 };
 

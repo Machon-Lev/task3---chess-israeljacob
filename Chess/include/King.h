@@ -4,6 +4,6 @@ class King :
     public Piece
 {
 public:
-    King(std::string name, Player player);
+    King(Player player);
 };
 
