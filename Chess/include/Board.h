@@ -16,7 +16,8 @@ class Board {
 	Player whos_turn = WHITE_PLAYER;
 	Piece* pieces[8][8];
 	void move_piece(int int_src_loc0, int int_src_loc1, int int_dest_loc0, int int_dest_loc1);
-	bool help_is_chess(int row_to_check, int col_to_check, int num);
+	bool help_is_chess(int row_to_check, int col_to_check);
+	int get_iterator_num(int loc_row, int loc_col);
 
 public:
 	Board();
@@ -28,6 +29,8 @@ public:
 	int* convert_str_to_loc(std::string str_loc) const;
 	bool is_chess(int int_source_loc0, int int_source_loc1, int int_dest_loc0, int int_dest_loc1);
 	int* king_loc(Player player);
+	Piece* there_is_a_piece_diagonally(int int_source_loc0, int int_source_loc1, int int_dest_loc0, int int_dest_loc1);
+	Piece* there_is_a_piece_directly(int int_source_loc0, int int_source_loc1, int int_dest_loc0, int int_dest_loc1);
 
 	friend class Piece;
 };

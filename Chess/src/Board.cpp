@@ -17,7 +17,7 @@ bool Board::is_chess(int int_source_loc0, int int_source_loc1, int int_dest_loc0
 	int king_loc_row = king_loc(whos_turn)[0];
 	int king_loc_col = king_loc(whos_turn)[1];
 
-	if (help_is_chess(king_loc_row, king_loc_col, 1) || help_is_chess(king_loc_row, king_loc_col, -1))
+	if (help_is_chess(king_loc_row, king_loc_col))
 	{
 		move_piece(int_dest_loc0, int_dest_loc1, int_source_loc0, int_source_loc1);
 		pieces[int_dest_loc0][int_dest_loc1] = eaten;
@@ -41,14 +41,57 @@ int* Board::king_loc(Player player)
 	}
 }
 
+Piece* Board::there_is_a_piece_diagonally(int int_source_loc0, int int_source_loc1, int int_dest_loc0, int int_dest_loc1)
+{
+	int row_num = get_iterator_num(int_source_loc0, int_dest_loc0);
+	int col_num = get_iterator_num(int_source_loc1, int_dest_loc1);
+
+	for (size_t i = int_source_loc0 + row_num, j = int_source_loc1 + col_num;
+		(i < int_dest_loc0 || i == int_source_loc0) && (j < int_dest_loc1 || j == int_source_loc1);
+		i += row_num, j += col_num)
+	{
+		if (pieces[i][j] != nullptr)
+		{
+			return pieces[i][j];
+		}
+	}
+	return nullptr;
+}
+
+Piece* Board::there_is_a_piece_directly(int int_source_loc0, int int_source_loc1, int int_dest_loc0, int int_dest_loc1)
+{
+	if (int_source_loc0 == int_dest_loc0)
+	{
+		int start = std::min(int_source_loc1, int_dest_loc1);
+		int end = std::max(int_source_loc1, int_dest_loc1);
+		for (size_t i = start + 1; i < end; i++)
+		{
+			if (pieces[int_source_loc0][i] != nullptr)
+				return pieces[int_source_loc0][i];
+		}
+		return nullptr;
+	}
+	if (int_source_loc1 == int_dest_loc1)
+	{
+		int start = std::min(int_source_loc0, int_dest_loc0);
+		int end = std::max(int_source_loc0, int_dest_loc0);
+		for (size_t i = start + 1; i < end; i++)
+		{
+			if (pieces[i][int_source_loc1] != nullptr)
+				return pieces[i][int_source_loc1];
+		}
+		return nullptr;
+	}
+}
+
 Board::Board()
 {
 	pieces[0][0] = new Rook(WHITE_PLAYER);
 	pieces[0][1] = nullptr; //new Knight(WHITE_PLAYER);
-	pieces[0][2] = nullptr; //new Bishop(WHITE_PLAYER);
+	pieces[0][2] = new Bishop(WHITE_PLAYER);
 	pieces[0][3] = nullptr; //new Queen(WHITE_PLAYER);
 	pieces[0][4] = new King(WHITE_PLAYER);
-	pieces[0][5] = nullptr; //new Bishop(WHITE_PLAYER);
+	pieces[0][5] = new Bishop(WHITE_PLAYER);
 	pieces[0][6] = nullptr; //new Knight(WHITE_PLAYER);
 	pieces[0][7] = new Rook(WHITE_PLAYER);
 
@@ -62,10 +105,10 @@ Board::Board()
 
 	pieces[7][0] = new Rook(BLACK_PLAYER);
 	pieces[7][1] = nullptr; //new Knight(BLACK_PLAYER);
-	pieces[7][2] = nullptr; //new Bishop(BLACK_PLAYER);
+	pieces[7][2] = new Bishop(BLACK_PLAYER);
 	pieces[7][3] = nullptr; //new Queen(BLACK_PLAYER);
 	pieces[7][4] = new King(BLACK_PLAYER);
-	pieces[7][5] = nullptr; //new Bishop(BLACK_PLAYER);
+	pieces[7][5] = new Bishop(BLACK_PLAYER);
 	pieces[7][6] = nullptr; //new Knight(BLACK_PLAYER);
 	pieces[7][7] = new Rook(BLACK_PLAYER);
 }
@@ -96,32 +139,29 @@ void Board::move_piece(int int_src_loc0, int int_src_loc1, int int_dest_loc0, in
 	pieces[int_src_loc0][int_src_loc1] = nullptr;
 }
 
-bool Board::help_is_chess(int row_to_check, int col_to_check, int num)
+bool Board::help_is_chess(int row_to_check, int col_to_check)
 {
-	int i = row_to_check + num;
-
-	while (i >= 0 && i < 8)
+	for (size_t i = 0; i < 8; i++)
 	{
-		if (pieces[i][col_to_check] != nullptr && dynamic_cast<Rook*>(pieces[i][col_to_check])
-			&& pieces[i][col_to_check]->get_player() != whos_turn)
-			return true;
-		else if (pieces[i][col_to_check] != nullptr)
-			break;
-		i += num;
-	}
-
-	i = col_to_check + num;
-
-	while (i >= 0 && i < 8)
-	{
-		if (pieces[row_to_check][i] != nullptr && dynamic_cast<Rook*>(pieces[row_to_check][i])
-			&& pieces[row_to_check][i]->get_player() != whos_turn)
-			return true;
-		else if (pieces[row_to_check][i] != nullptr)
-			break;
-		i += num;
+		for (size_t j = 0; j < 8; j++)
+		{
+			if ((i!= row_to_check || j!= col_to_check) && pieces[i][j] != nullptr 
+				&& pieces[i][j]->get_player() != whos_turn
+				&& pieces[i][j]->is_legal_move(i, j, row_to_check, col_to_check, *this))
+				return true;
+		}
 	}
 	return false;
+}
+
+int Board::get_iterator_num(int loc0, int loc1)
+{
+	if (loc1 > loc0)
+		return 1;
+	else if (loc1 < loc0)
+		return -1;
+	else
+		return 0;
 }
 
 int Board::code_response(std::string res)
@@ -142,7 +182,7 @@ int Board::code_response(std::string res)
 	if (!get_piece(int_source_loc0, int_source_loc1)
 		->is_legal_move(int_source_loc0, int_source_loc1, int_dest_loc0, int_dest_loc1, *this))
 		return 21;
-	if(is_chess(int_source_loc0, int_source_loc1, int_dest_loc0, int_dest_loc1))
+	if (is_chess(int_source_loc0, int_source_loc1, int_dest_loc0, int_dest_loc1))
 		return 31;
 	set_whos_turn();
 	//this->move_piece(res);
