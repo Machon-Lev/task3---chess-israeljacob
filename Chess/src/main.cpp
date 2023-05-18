@@ -1,11 +1,13 @@
 // Chess 
+#include<string>
 #include "Chess.h"
 #include"Piece.h"
 #include"Board.h"
+#include"Rook.h"
 
 int main()
 {
-	string board = "RNBQKBNRPPPPPPPP################################pppppppprnbqkbnr"; 
+	string board = "R######R################################################r######r"; 
 //	string board = "##########K###############################R#############r#r#####";
 	Chess a(board);
 	int codeResponse = 0;
@@ -28,10 +30,8 @@ int main()
 
 		/**/ 
 		{ // put your code here instead that code
-			Board board = Board();
-
-			cout << "code response >> ";
-			cin >> codeResponse;
+			static Board board = Board();
+			codeResponse = board.code_response(res);
 		}
 		/**/
 

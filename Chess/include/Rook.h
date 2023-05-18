@@ -7,6 +7,6 @@ class Rook :
 {
 public:
     Rook(Player player);
-    bool is_legal_move(const std::string str_loc, const Board board) override;
+    bool is_legal_move(const std::string str_loc, Board board) override;
 };
 
