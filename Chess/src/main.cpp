@@ -7,7 +7,7 @@
 
 int main()
 {
-	string board = "R#B#KB#R################################################r#b#kb#r"; 
+	string board = "RNBQKBNR################################################rnbqkbnr"; 
 //	string board = "##########K###############################R#############r#r#####";
 	Chess a(board);
 	int codeResponse = 0;

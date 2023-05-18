@@ -5,7 +5,10 @@ Knight::Knight(Player player) : Piece(player)
 
 }
 
-bool Knight::is_legal_move(int int_source_loc0, int int_source_loc1, int int_dest_loc0, int int_dest_loc1, Board board)
+bool Knight::is_legal_move(int src_row, int src_col, int dest_row, int dest_col, Board board)
 {
+    if ((abs(src_row - dest_row) == 2 && abs(src_col - dest_col) == 1)
+        || (abs(src_row - dest_row) == 1 && abs(src_col - dest_col) == 2))
+        return true;
     return false;
 }

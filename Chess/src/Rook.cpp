@@ -5,10 +5,10 @@ Rook::Rook(Player player) : Piece(player)
 {
 }
 
-bool Rook::is_legal_move(int int_source_loc0, int int_source_loc1, int int_dest_loc0, int int_dest_loc1, Board board)
+bool Rook::is_legal_move(int src_row, int src_col, int dest_row, int dest_col, Board board)
 {
-	if (int_source_loc0 != int_dest_loc0 && int_source_loc1 != int_dest_loc1)
+	if (src_row != dest_row && src_col != dest_col)
 		return false;
 
-	return !board.there_is_a_piece_directly(int_source_loc0, int_source_loc1, int_dest_loc0, int_dest_loc1);
+	return !board.there_is_a_piece_directly(src_row, src_col, dest_row, dest_col);
 }
