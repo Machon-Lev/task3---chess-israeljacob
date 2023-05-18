@@ -4,6 +4,7 @@
 
 class Board;
 
+
 class Piece
 {
 protected:

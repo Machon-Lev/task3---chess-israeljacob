@@ -1,5 +1,8 @@
 #include "Board.h"
 
+/**
+	* Constructs a new Board object and initializes the chessboard with the starting positions of the pieces.
+	*/
 Board::Board()
 {
 	pieces[0][0] = new Rook(WHITE_PLAYER);
@@ -39,11 +42,24 @@ Board::Board()
 	pieces[7][7] = new Rook(BLACK_PLAYER);
 }
 
+/**
+	 * Gets the piece at the specified row and column on the chessboard.
+	 *
+	 * @param row The row index.
+	 * @param col The column index.
+	 * @return A pointer to the Piece object at the specified position.
+	 */
 Piece* Board::getPiece(int row, int col)
 {
 	return pieces[row][col];
 }
 
+/**
+	 * Checks a move specified by a string and returns a response code based on the move.
+	 *
+	 * @param res The move string representation.
+	 * @return An integer response code indicating the outcome of the move.
+	 */
 int Board::code_response(std::string res)
 {
 	int src_row = convert_str_to_loc(res[0]);
@@ -66,6 +82,15 @@ int Board::code_response(std::string res)
 	return 42;
 }
 
+/**
+	 * Checks if there is a piece directly between two positions on the chessboard.
+	 *
+	 * @param src_row The row index of the source position.
+	 * @param src_col The column index of the source position.
+	 * @param dest_row The row index of the destination position.
+	 * @param dest_col The column index of the destination position.
+	 * @return True if there is a piece directly between the source and destination positions, false otherwise.
+	 */
 bool Board::there_is_a_piece_directly(int src_row, int src_col, int dest_row, int dest_col)
 {
 	if (src_row == dest_row)
@@ -92,6 +117,15 @@ bool Board::there_is_a_piece_directly(int src_row, int src_col, int dest_row, in
 	}
 }
 
+/**
+	 * Checks if there is a piece diagonally between two positions on the chessboard.
+	 *
+	 * @param src_row The row index of the source position.
+	 * @param src_col The column index of the source position.
+	 * @param dest_row The row index of the destination position.
+	 * @param dest_col The column index of the destination position.
+	 * @return True if there is a piece diagonally between the source and destination positions, false otherwise.
+	 */
 bool Board::there_is_a_piece_diagonally(int src_row, int src_col, int dest_row, int dest_col)
 {
 	int row_num = get_iterator_num(src_row, dest_row);
@@ -109,6 +143,12 @@ bool Board::there_is_a_piece_diagonally(int src_row, int src_col, int dest_row, 
 	return false;
 }
 
+/**
+	 * Converts a character representation of a location to the corresponding integer index.
+	 *
+	 * @param str_loc The character representation of the location.
+	 * @return The integer index representing the location.
+	 */
 int Board::convert_str_to_loc(char str_loc) const
 {
 	if (str_loc >= 'a')
@@ -118,6 +158,15 @@ int Board::convert_str_to_loc(char str_loc) const
 	return str_loc - '1';
 }
 
+/**
+	 * Checks if a move results in a "check" situation for the current player.
+	 *
+	 * @param src_row The row index of the source position.
+	 * @param src_col The column index of the source position.
+	 * @param dest_row The row index of the destination position.
+	 * @param dest_col The column index of the destination position.
+	 * @return True if the move results in a "check" situation, false otherwise.
+	 */
 bool Board::is_chess(int src_row, int src_col, int dest_row, int dest_col)
 {
 	Piece* eaten = pieces[dest_row][dest_col];
@@ -134,6 +183,13 @@ bool Board::is_chess(int src_row, int src_col, int dest_row, int dest_col)
 	return false;
 }
 
+/**
+	 * Helper function to check if the current player is in "check".
+	 *
+	 * @param row_to_check The row index of the position to check.
+	 * @param col_to_check The column index of the position to check.
+	 * @return True if the current player is in "check" at the specified position, false otherwise.
+	 */
 bool Board::help_is_chess(int row_to_check, int col_to_check)
 {
 	for (size_t i = 0; i < 8; i++)
@@ -149,12 +205,26 @@ bool Board::help_is_chess(int row_to_check, int col_to_check)
 	return false;
 }
 
+/**
+	 * Moves a piece from the source position to the destination position on the chessboard.
+	 *
+	 * @param src_row The row index of the source position.
+	 * @param src_col The column index of the source position.
+	 * @param dest_row The row index of the destination position.
+	 * @param dest_col The column index of the destination position.
+	 */
 void Board::move_piece(int src_row, int src_col, int dest_row, int dest_col)
 {
 	pieces[dest_row][dest_col] = pieces[src_row][src_col];
 	pieces[src_row][src_col] = nullptr;
 }
 
+/**
+	 * Finds the location of the king for the specified player on the chessboard.
+	 *
+	 * @param player The player whose king's location is to be found.
+	 * @return An array of two integers representing the row and column indices of the king's location.
+	 */
 int* Board::king_loc(Player player)
 {
 	for (size_t i = 0; i < 8; i++)
@@ -170,6 +240,13 @@ int* Board::king_loc(Player player)
 	}
 }
 
+/**
+	 * Calculates the iterator number based on the given source and destination indices.
+	 *
+	 * @param loc_row The source row index.
+	 * @param loc_col The source column index.
+	 * @return The iterator number (-1, 0, or 1) indicating the direction of movement.
+	 */
 int Board::get_iterator_num(int loc0, int loc1)
 {
 	if (loc1 > loc0)

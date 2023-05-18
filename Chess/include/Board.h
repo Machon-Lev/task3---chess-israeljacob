@@ -11,6 +11,10 @@
 
 class Piece;
 
+/**
+* The Board class represents a chessboard and manages the pieces on it.
+*/
+
 class Board {
 	Player whos_turn = WHITE_PLAYER;
 	Piece* pieces[8][8];
@@ -30,5 +34,3 @@ private:
 	int* king_loc(Player player);
 	int get_iterator_num(int loc_row, int loc_col);
 };
-
-
