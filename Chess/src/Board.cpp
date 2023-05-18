@@ -11,12 +11,22 @@ Board::Board()
 	pieces[0][6] = new Knight(WHITE_PLAYER);
 	pieces[0][7] = new Rook(WHITE_PLAYER);
 
-	for (size_t i = 2; i < 8; i++)
+	for (size_t j = 0; j < 8; j++)
+	{
+		pieces[1][j] = new Pawn(WHITE_PLAYER);
+	}
+
+	for (size_t i = 2; i < 6; i++)
 	{
 		for (size_t j = 0; j < 8; j++)
 		{
 			pieces[i][j] = nullptr;
 		}
+	}
+
+	for (size_t j = 0; j < 8; j++)
+	{
+		pieces[6][j] = new Pawn(BLACK_PLAYER);
 	}
 
 	pieces[7][0] = new Rook(BLACK_PLAYER);
@@ -27,6 +37,11 @@ Board::Board()
 	pieces[7][5] = new Bishop(BLACK_PLAYER);
 	pieces[7][6] = new Knight(BLACK_PLAYER);
 	pieces[7][7] = new Rook(BLACK_PLAYER);
+}
+
+Piece* Board::getPiece(int row, int col)
+{
+	return pieces[row][col];
 }
 
 int Board::code_response(std::string res)
@@ -40,7 +55,7 @@ int Board::code_response(std::string res)
 		return 11;
 	if (pieces[src_row][src_col]->get_player() != whos_turn)
 		return 12;
-	if (pieces[dest_row][dest_col] != nullptr && pieces[src_row][src_col]->get_player() == whos_turn)
+	if (pieces[dest_row][dest_col] != nullptr && pieces[dest_row][dest_col]->get_player() == whos_turn)
 		return 13;
 	if (!pieces[src_row][src_col]
 		->is_legal_move(src_row, src_col, dest_row, dest_col, *this))

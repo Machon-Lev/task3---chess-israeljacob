@@ -17,6 +17,7 @@ class Board {
 
 public:
 	Board();
+	Piece* getPiece(int row, int col);
 	int code_response(std::string res);
 	bool there_is_a_piece_directly(int src_row, int src_col, int dest_row, int dest_col);
 	bool there_is_a_piece_diagonally(int src_row, int src_col, int dest_row, int dest_col);

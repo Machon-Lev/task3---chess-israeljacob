@@ -6,7 +6,7 @@ class Board;
 
 class Piece
 {
-private:
+protected:
 	Player _player;
 
 public:
