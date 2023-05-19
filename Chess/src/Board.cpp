@@ -45,30 +45,6 @@ Board::Board()
 	pieces[7][7] = new Rook(BLACK_PLAYER);
 }
 
-//copy ctor
-Board::Board(const Board& board)
-{
-	for (size_t i = 0; i < 8; i++)
-	{
-		for (size_t j = 0; j < 8; j++)
-		{
-			pieces[i][j] = board.pieces[i][j];
-		}
-	}
-}
-
-// dtor
-Board::~Board()
-{
-	for (size_t i = 0; i < 8; i++)
-	{
-		for (size_t j = 0; j < 8; j++)
-		{
-			delete pieces[i][j];
-		}
-	}
-}
-
 /**
 	 * Gets the piece at the specified row and column on the chessboard.
 	 *

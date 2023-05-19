@@ -21,8 +21,6 @@ class Board {
 
 public:
 	Board();
-	Board(const Board& board);
-	~Board();
 	Piece* getPiece(const int row,const int col) const;
 	int code_response(const std::string res);
 	bool there_is_a_piece_directly(const int src_row, const int src_col, const int dest_row, const int dest_col) const;
