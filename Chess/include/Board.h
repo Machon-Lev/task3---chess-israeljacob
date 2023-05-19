@@ -21,16 +21,18 @@ class Board {
 
 public:
 	Board();
-	Piece* getPiece(int row, int col);
-	int code_response(std::string res);
-	bool there_is_a_piece_directly(int src_row, int src_col, int dest_row, int dest_col);
-	bool there_is_a_piece_diagonally(int src_row, int src_col, int dest_row, int dest_col);
+	Board(const Board& board);
+	~Board();
+	Piece* getPiece(const int row,const int col) const;
+	int code_response(const std::string res);
+	bool there_is_a_piece_directly(const int src_row, const int src_col, const int dest_row, const int dest_col) const;
+	bool there_is_a_piece_diagonally(const int src_row, const int src_col, const int dest_row, const int dest_col) const;
 
 private:
-	int convert_str_to_loc(char str_loc) const;
-	bool is_chess(int src_row, int src_col, int dest_row, int dest_col);
-	bool help_is_chess(int row_to_check, int col_to_check);
-	void move_piece(int src_row, int src_col, int dest_row, int dest_col);
-	int* king_loc(Player player);
-	int get_iterator_num(int loc_row, int loc_col);
+	int convert_str_to_loc(const char str_loc) const;
+	bool is_check();
+	bool help_is_check(const int row_to_check, const int col_to_check) const;
+	void move_piece(const int src_row, const int src_col, const int dest_row, const int dest_col);
+	int* king_loc(const Player player) const;
+	int get_iterator_num(const int loc_row, const int loc_col) const ;
 };
