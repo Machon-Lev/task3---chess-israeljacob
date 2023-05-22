@@ -45,6 +45,30 @@ Board::Board()
 	pieces[7][7] = new Rook(BLACK_PLAYER);
 }
 
+Board::Board(const Board& other) {
+	// Copy the pieces from the other board
+	for (int row = 0; row < 8; row++) {
+		for (int col = 0; col < 8; col++) {
+			if (other.pieces[row][col] != nullptr) {
+				pieces[row][col] = other.pieces[row][col]; 
+			}
+			else {
+				pieces[row][col] = nullptr;
+			}
+		}
+	}
+}
+
+Board::Board(Board&& other) noexcept{
+	// Move the pieces from the other board
+	for (int row = 0; row < 8; row++) {
+		for (int col = 0; col < 8; col++) {
+			pieces[row][col] = other.pieces[row][col];
+			other.pieces[row][col] = nullptr;
+		}
+	}
+}
+
 /**
 	 * Gets the piece at the specified row and column on the chessboard.
 	 *
