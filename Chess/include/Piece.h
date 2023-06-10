@@ -26,5 +26,5 @@ public:
 	 * @param board The chessboard object representing the current state of the game.
 	 * @return True if the move is a legal move for the piece, false otherwise.
 	 */
-	virtual bool is_legal_move(int source_row, int source_col, int dest_row, int dest_col , const Board board) = 0;
+	virtual bool is_legal_move(int source_row, int source_col, int dest_row, int dest_col , const Board* board) = 0;
 };

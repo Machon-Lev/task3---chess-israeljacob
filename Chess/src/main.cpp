@@ -8,7 +8,6 @@
 int main()
 {
 	string board = "RNBQKBNRPPPPPPPP################################pppppppprnbqkbnr"; 
-//	string board = "##########K###############################R#############r#r#####";
 	Chess a(board);
 	int codeResponse = 0;
 	string res = a.getInput();
@@ -28,12 +27,9 @@ int main()
 		42 - the last movement was legal, next turn 
 		*/
 
-		/**/ 
-		{ // put your code here instead that code
-			static Board board = Board();
-			codeResponse = board.code_response(res);
-		}
-		/**/
+	    static Board my_board = Board(board);
+	    codeResponse = my_board.code_response(res);
+		
 
 		a.setCodeResponse(codeResponse);
 		res = a.getInput(); 

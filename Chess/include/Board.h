@@ -18,11 +18,14 @@ class Piece;
 class Board {
 	Player whos_turn = WHITE_PLAYER;
 	Piece* pieces[8][8];
+	int white_king_place[2];
+	int black_king_place[2];
 
 public:
-	Board();
+	Board(std::string board);
 	Board(const Board& other);
 	Board(Board&& other) noexcept;
+	~Board();
 	Piece* getPiece(const int row,const int col) const;
 	int code_response(const std::string res);
 	bool there_is_a_piece_directly(const int src_row, const int src_col, const int dest_row, const int dest_col) const;
@@ -31,8 +34,6 @@ public:
 private:
 	int convert_str_to_loc(const char str_loc) const;
 	bool is_check();
-	bool help_is_check(const int row_to_check, const int col_to_check) const;
 	void move_piece(const int src_row, const int src_col, const int dest_row, const int dest_col);
-	int* king_loc(const Player player) const;
 	int get_iterator_num(const int loc_row, const int loc_col) const ;
 };

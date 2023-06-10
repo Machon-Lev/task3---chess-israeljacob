@@ -1,56 +1,93 @@
 #include "Board.h"
+#include<typeinfo>
 
 /**
-	* Constructs a new Board object and initializes the chessboard with the starting positions of the pieces.
-	*/
-Board::Board()
+ * Constructs a new Board object and initializes the chessboard with the starting positions of the pieces.
+ *
+ * @param board A string representing the starting positions of the pieces on the chessboard.
+ */
+Board::Board(std::string board)
 {
-	pieces[0][0] = new Rook(WHITE_PLAYER);
-	pieces[0][1] = new Knight(WHITE_PLAYER);
-	pieces[0][2] = new Bishop(WHITE_PLAYER);
-	pieces[0][3] = new Queen(WHITE_PLAYER);
-	pieces[0][4] = new King(WHITE_PLAYER);
-	pieces[0][5] = new Bishop(WHITE_PLAYER);
-	pieces[0][6] = new Knight(WHITE_PLAYER);
-	pieces[0][7] = new Rook(WHITE_PLAYER);
-
-	// Initialize the white player pawns
-	for (size_t j = 0; j < 8; j++)
+	int i = 0;
+	for (int row = 0; row < 8; ++row)
 	{
-		pieces[1][j] = new Pawn(WHITE_PLAYER);
-	}
-
-	// Initialize nullptr at the 4 empty rows
-	for (size_t i = 2; i < 6; i++)
-	{
-		for (size_t j = 0; j < 8; j++)
+		for (int col = 0; col < 8; ++col)
 		{
-			pieces[i][j] = nullptr;
+			switch (board[i])
+			{
+			case 'r':
+				pieces[row][col] = new Rook(BLACK_PLAYER);
+				break;
+			case 'n':
+				pieces[row][col] = new Knight(BLACK_PLAYER);
+				break;
+			case 'b':
+				pieces[row][col] = new Bishop(BLACK_PLAYER);
+				break;
+			case 'q':
+				pieces[row][col] = new Queen(BLACK_PLAYER);
+				break;
+			case 'k':
+				pieces[row][col] = new King(BLACK_PLAYER);
+				black_king_place[0] = row;
+				black_king_place[1] = col;
+				break;
+			case 'p':
+				pieces[row][col] = new Pawn(BLACK_PLAYER);
+				break;
+			case 'R':
+				pieces[row][col] = new Rook(WHITE_PLAYER);
+				break;
+			case 'N':
+				pieces[row][col] = new Knight(WHITE_PLAYER);
+				break;
+			case 'B':
+				pieces[row][col] = new Bishop(WHITE_PLAYER);
+				break;
+			case 'Q':
+				pieces[row][col] = new Queen(WHITE_PLAYER);
+				break;
+			case 'K':
+				pieces[row][col] = new King(WHITE_PLAYER);
+				white_king_place[0] = row;
+				white_king_place[1] = col;
+				break;
+			case 'P':
+				pieces[row][col] = new Pawn(WHITE_PLAYER);
+				break;
+			default:
+				pieces[row][col] = nullptr;
+				break;
+			}
+			++i;
 		}
 	}
-
-	// Initialize the black player pawns
-	for (size_t j = 0; j < 8; j++)
-	{
-		pieces[6][j] = new Pawn(BLACK_PLAYER);
-	}
-
-	pieces[7][0] = new Rook(BLACK_PLAYER);
-	pieces[7][1] = new Knight(BLACK_PLAYER);
-	pieces[7][2] = new Bishop(BLACK_PLAYER);
-	pieces[7][3] = new Queen(BLACK_PLAYER);
-	pieces[7][4] = new King(BLACK_PLAYER);
-	pieces[7][5] = new Bishop(BLACK_PLAYER);
-	pieces[7][6] = new Knight(BLACK_PLAYER);
-	pieces[7][7] = new Rook(BLACK_PLAYER);
 }
 
+/**
+ * Creates a copy of a Board object.
+ *
+ * @param other The Board object to be copied.
+ */	
 Board::Board(const Board& other) {
 	// Copy the pieces from the other board
 	for (int row = 0; row < 8; row++) {
 		for (int col = 0; col < 8; col++) {
 			if (other.pieces[row][col] != nullptr) {
 				pieces[row][col] = other.pieces[row][col]; 
+				if(dynamic_cast<King*>(pieces[row][col]))
+				{
+					if (pieces[row][col]->get_player() == BLACK_PLAYER)
+					{
+						black_king_place[0] = row;
+						black_king_place[1] = col;
+					}
+					else
+					{
+						white_king_place[0] = row;
+						white_king_place[1] = col;
+					}
+				}
 			}
 			else {
 				pieces[row][col] = nullptr;
@@ -59,34 +96,68 @@ Board::Board(const Board& other) {
 	}
 }
 
+/**
+ * Moves the pieces from another Board object to a new Board object.
+ *
+ * @param other The Board object to be moved.
+ */
 Board::Board(Board&& other) noexcept{
 	// Move the pieces from the other board
 	for (int row = 0; row < 8; row++) {
 		for (int col = 0; col < 8; col++) {
 			pieces[row][col] = other.pieces[row][col];
+			if (dynamic_cast<King*>(pieces[row][col]))
+			{
+				if (pieces[row][col]->get_player() == BLACK_PLAYER)
+				{
+					black_king_place[0] = row;
+					black_king_place[1] = col;
+				}
+				else
+				{
+					white_king_place[0] = row;
+					white_king_place[1] = col;
+				}
+			}
 			other.pieces[row][col] = nullptr;
 		}
 	}
 }
 
 /**
-	 * Gets the piece at the specified row and column on the chessboard.
-	 *
-	 * @param row The row index.
-	 * @param col The column index.
-	 * @return A pointer to the Piece object at the specified position.
-	 */
+ * Destroys the Board object and frees memory allocated for dynamically allocated Piece objects.
+ */
+Board::~Board()
+{
+	// Delete all dynamically allocated Piece objects
+	for (size_t row = 0; row < 8; ++row)
+	{
+		for (size_t col = 0; col < 8; ++col)
+		{
+			delete pieces[row][col];
+		}
+		//delete[] pieces;
+	}
+}
+
+/**
+* Gets the piece at the specified row and column on the chessboard.
+*
+* @param row The row index.
+* @param col The column index.
+* @return A pointer to the Piece object at the specified position.
+*/
 Piece* Board::getPiece(const int row,const int col) const
 {
 	return pieces[row][col];
 }
 
 /**
-	 * Checks a move specified by a string and returns a response code based on the move.
-	 *
-	 * @param res The move string representation.
-	 * @return An integer response code indicating the outcome of the move.
-	 */
+* Checks a move specified by a string and returns a response code based on the move.
+*
+* @param res The move string representation.
+* @return An integer response code indicating the outcome of the move.
+*/
 int Board::code_response(const std::string res)
 {
 	int src_row = convert_str_to_loc(res[0]);
@@ -101,7 +172,7 @@ int Board::code_response(const std::string res)
 	if (pieces[dest_row][dest_col] != nullptr && pieces[dest_row][dest_col]->get_player() == whos_turn) // There one of player pieces at the destination
 		return 13;
 	if (!pieces[src_row][src_col]
-		->is_legal_move(src_row, src_col, dest_row, dest_col, *this)) // Illegal movement of that piece
+		->is_legal_move(src_row, src_col, dest_row, dest_col, this)) // Illegal movement of that piece
 		return 21;
 
 	// If the move is legal
@@ -124,14 +195,14 @@ int Board::code_response(const std::string res)
 }
 
 /**
-	 * Checks if there is a piece directly between two positions on the chessboard.
-	 *
-	 * @param src_row The row index of the source position.
-	 * @param src_col The column index of the source position.
-	 * @param dest_row The row index of the destination position.
-	 * @param dest_col The column index of the destination position.
-	 * @return True if there is a piece directly between the source and destination positions, false otherwise.
-	 */
+* Checks if there is a piece directly between two positions on the chessboard.
+*
+* @param src_row The row index of the source position.
+* @param src_col The column index of the source position.
+* @param dest_row The row index of the destination position.
+* @param dest_col The column index of the destination position.
+* @return True if there is a piece directly between the source and destination positions, false otherwise.
+*/
 bool Board::there_is_a_piece_directly(const int src_row,const int src_col,const int dest_row,const int dest_col) const
 {
 	if (src_row == dest_row) // Horizontal move
@@ -159,14 +230,14 @@ bool Board::there_is_a_piece_directly(const int src_row,const int src_col,const 
 }
 
 /**
-	 * Checks if there is a piece diagonally between two positions on the chessboard.
-	 *
-	 * @param src_row The row index of the source position.
-	 * @param src_col The column index of the source position.
-	 * @param dest_row The row index of the destination position.
-	 * @param dest_col The column index of the destination position.
-	 * @return True if there is a piece diagonally between the source and destination positions, false otherwise.
-	 */
+* Checks if there is a piece diagonally between two positions on the chessboard.
+*
+* @param src_row The row index of the source position.
+* @param src_col The column index of the source position.
+* @param dest_row The row index of the destination position.
+* @param dest_col The column index of the destination position.
+* @return True if there is a piece diagonally between the source and destination positions, false otherwise.
+*/
 bool Board::there_is_a_piece_diagonally(const int src_row, const int src_col, const int dest_row, const int dest_col) const
 {
 	int row_num = get_iterator_num(src_row, dest_row);
@@ -184,11 +255,11 @@ bool Board::there_is_a_piece_diagonally(const int src_row, const int src_col, co
 }
 
 /**
-	 * Converts a character representation of a location to the corresponding integer index.
-	 *
-	 * @param str_loc The character representation of the location.
-	 * @return The integer index representing the location.
-	 */
+* Converts a character representation of a location to the corresponding integer index.
+*
+* @param str_loc The character representation of the location.
+* @return The integer index representing the location.
+*/
 int Board::convert_str_to_loc(char str_loc) const
 {
 	if (str_loc >= 'a')
@@ -205,28 +276,19 @@ int Board::convert_str_to_loc(char str_loc) const
 	 */
 bool Board::is_check()
 {
-	int king_loc_row = king_loc(whos_turn)[0];
-	int king_loc_col = king_loc(whos_turn)[1];
-
-	return help_is_check(king_loc_row, king_loc_col);
-}
-
-/**
-	 * Helper function to check if the current player is in "check".
-	 *
-	 * @param row_to_check The row index of the position to check.
-	 * @param col_to_check The column index of the position to check.
-	 * @return True if the current player is in "check" at the specified position, false otherwise.
-	 */
-bool Board::help_is_check(const int row_to_check, const int col_to_check) const
-{
 	for (size_t i = 0; i < 8; i++)
 	{
 		for (size_t j = 0; j < 8; j++)
 		{
-			if ((i!= row_to_check || j!= col_to_check) && pieces[i][j] != nullptr 
+			if (whos_turn == BLACK_PLAYER && 
+				(i!= black_king_place[0] || j!= black_king_place[1]) && pieces[i][j] != nullptr
 				&& pieces[i][j]->get_player() != whos_turn
-				&& pieces[i][j]->is_legal_move(i, j, row_to_check, col_to_check, *this))
+				&& pieces[i][j]->is_legal_move(i, j, black_king_place[0], black_king_place[1], this))
+				return true;
+			else if(whos_turn == WHITE_PLAYER &&
+				(i != white_king_place[0] || j != white_king_place[1]) && pieces[i][j] != nullptr
+				&& pieces[i][j]->get_player() != whos_turn
+				&& pieces[i][j]->is_legal_move(i, j, white_king_place[0], white_king_place[1], this))
 				return true;
 		}
 	}
@@ -234,47 +296,39 @@ bool Board::help_is_check(const int row_to_check, const int col_to_check) const
 }
 
 /**
-	 * Moves a piece from the source position to the destination position on the chessboard.
-	 *
-	 * @param src_row The row index of the source position.
-	 * @param src_col The column index of the source position.
-	 * @param dest_row The row index of the destination position.
-	 * @param dest_col The column index of the destination position.
-	 */
+* Moves a piece from the source position to the destination position on the chessboard.
+*
+* @param src_row The row index of the source position.
+* @param src_col The column index of the source position.
+* @param dest_row The row index of the destination position.
+* @param dest_col The column index of the destination position.
+*/
 void Board::move_piece(const int src_row, const int src_col, const int dest_row, const int dest_col)
 {
+	if (dynamic_cast<King*>(pieces[src_row][src_col]))
+	{
+		if (whos_turn == BLACK_PLAYER)
+		{
+			black_king_place[0] = dest_row;
+			black_king_place[1] = dest_col;
+		}
+		else
+		{
+			white_king_place[0] = dest_row;
+			white_king_place[1] = dest_col;
+		}
+	}
 	pieces[dest_row][dest_col] = pieces[src_row][src_col];
 	pieces[src_row][src_col] = nullptr;
 }
 
 /**
-	 * Finds the location of the king for the specified player on the chessboard.
-	 *
-	 * @param player The player whose king's location is to be found.
-	 * @return An array of two integers representing the row and column indices of the king's location.
-	 */
-int* Board::king_loc(const Player player) const
-{
-	for (size_t i = 0; i < 8; i++)
-	{
-		for (size_t j = 0; j < 8; j++)
-		{
-			if (pieces[i][j] != nullptr && dynamic_cast<King*>(pieces[i][j]) && pieces[i][j]->get_player() == player)
-			{
-				int result[2] = { i , j };
-				return result;
-			}
-		}
-	}
-}
-
-/**
-	 * Calculates the iterator number based on the given source and destination indices.
-	 *
-	 * @param loc_row The source row index.
-	 * @param loc_col The source column index.
-	 * @return The iterator number (-1, 0, or 1) indicating the direction of movement.
-	 */
+* Calculates the iterator number based on the given source and destination indices.
+*
+* @param loc_row The source row index.
+* @param loc_col The source column index.
+* @return The iterator number (-1, 0, or 1) indicating the direction of movement.
+*/
 int Board::get_iterator_num(const int loc0, const int loc1) const
 {
 	if (loc1 > loc0)
